@@ -1,0 +1,7 @@
+name = "MLPosit"
+uuid = "fb159526-acb0-11e8-0994-d79d84eae8ac"
+authors = ["Isaac <isaac.yonemoto@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
