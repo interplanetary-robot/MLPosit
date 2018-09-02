@@ -1,5 +1,5 @@
-p2f(a::Posit8)::Float64 = convert(Float64, a)
-f2p(x::Float64)::Posit8 = convert(Posit8, a)
+p2f(p::Posit8)::Float64 = convert(Float64, p)
+f2p(x::Float64)::Posit8 = convert(Posit8, x)
 
 lazyadd(a::Posit8, b::Posit8)::Posit8 = f2p(p2f(a) + p2f(b))
 lazysub(a::Posit8, b::Posit8)::Posit8 = f2p(p2f(a) - p2f(b))

@@ -84,3 +84,7 @@ function Base.convert(::Type{Float64}, x::Posit8)
     #use a lookup table for the reversion function.
     __posit_lookuptable64[reinterpret(UInt8, x) + 1]
 end
+
+#in new julia, explicit conversions are required
+Float64(x::Posit8) = convert(Float64, x)
+Posit8(x::Float64) = convert(Posit8, x)
