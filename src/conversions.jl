@@ -9,7 +9,7 @@ function breakdown(x::Float64)
     return (x_neg, x_exp, x_frc)
 end
 
-function assemble(x_exp::Int16, x_frc::UInt16) where T
+function assemble(x_exp::Int16, x_frc::UInt16)
     if x_exp >= 0
         (reinterpret(Int16, 0xC000 | x_frc) >> x_exp) & 0x7FFF
     else #x_exp < 0
@@ -35,9 +35,11 @@ function Base.convert(::Type{Posit8}, x::Float64)
     (x_neg, x_exp, x_frc) = breakdown(x)
 
     u16val = assemble(x_exp, x_frc)
+
     u16val = x_neg ? -u16val : u16val
     (trunc, round, guard, resid) = finishing(u16val)
     #round to nearest zero
+
     u8val = trunc + ((round | resid) & guard)
 
     reinterpret(Posit8, u8val)

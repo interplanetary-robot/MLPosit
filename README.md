@@ -40,8 +40,8 @@ Current code:
   as_posit(i::UInt8) = reinterpret(Posit8, i)
 
   # allocate an array of 10k inputs to add.
-  ivalues = rand(UInt8, 10000, 2)
-  pvalues = as_posit.(ivalues)
+  const ivalues = rand(UInt8, 10000, 2)
+  const pvalues = as_posit.(ivalues)
 
   #addition test
   perf_add(idx) = pvalues[idx, 1] + pvalues[idx, 2]
@@ -52,15 +52,15 @@ Current code:
 ```
 
 result:
-0.0015 +/- 0.0001 s (66.67 k allocations: 1.017 MiB)
+0.000348s
 
 ```julia
   # note: use julia 0.6.4
   using SigmoidNumbers
 
   # allocate an array of 10k inputs to add.
-  ivalues = rand(UInt8, 10000, 2)
-  pvalues = Posit{8,0}.(ivalues)
+  const ivalues = rand(UInt8, 10000, 2)
+  const pvalues = Posit{8,0}.(ivalues)
 
   # addition test
   perf_add(idx) = pvalues[idx, 1] + pvalues[idx, 2]
@@ -70,4 +70,4 @@ result:
   end
 ```
 result:
-0.0020 +/- 0.0004 s (48.98 k allocations: 765.281 KiB)
+0.000609s
