@@ -10,3 +10,6 @@ Base.:+(a::Posit8, b::Posit8)::Posit8 = lazyadd(a,b)
 Base.:-(a::Posit8, b::Posit8)::Posit8 = lazysub(a,b)
 Base.:*(a::Posit8, b::Posit8)::Posit8 = lazymul(a,b)
 Base.:/(a::Posit8, b::Posit8)::Posit8 = lazydiv(a,b)
+
+# for performance testing analyses.
+branch_add(a::Posit8, b::Posit8)::Posit8 = convert_with_branches(p2f(a) + p2f(b))

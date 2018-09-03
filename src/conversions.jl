@@ -28,11 +28,50 @@ function finishing(u16val::UInt16)
 end
 
 function Base.convert(::Type{Posit8}, x::Float64)
+    override = false
+    override_val = zero(Posit8)
+
+    nan_override = isnan(x)
+    override |= nan_override
+    override_val = POSIT8_NAN * nan_override
+
+    zer_override = iszero(x)
+    override |= zer_override
+
+    (x_neg, x_exp, x_frc) = breakdown(x)
+
+    of_override = x_exp > Int16(8)
+    override |= of_override
+    override_val = POSIT8_MAXPOS * of_override
+
+    uf_override = x_exp < Int16(-8)
+    override |= uf_override
+    override_val = POSIT8_MINPOS * uf_override
+
+    u16val = assemble(x_exp, x_frc)
+
+    u16val = x_neg ? -u16val : u16val
+    #u16val *= one(UInt16) - UInt16(2) * x_neg
+
+    (trunc, round, guard, resid) = finishing(u16val)
+    #round to nearest zero
+
+    u8val = trunc + ((round | resid) & guard)
+
+    u8val = (u8val * !override) | (u8val * override)
+
+    reinterpret(Posit8, u8val)
+end
+
+function convert_with_branches(x::Float64)
 
     isnan(x) && return nan(Posit8)
     iszero(x) && return zero(Posit8)
 
     (x_neg, x_exp, x_frc) = breakdown(x)
+
+    (x_exp > Int16(8)) && return reinterpret(Posit8, x_neg ? -POSIT8_MAXPOS : POSIT8_MAXPOS)
+    (x_exp < Int16(-8)) && return reinterpret(Posit8, x_neg ? -POSIT8_MINPOS : POSIT8_MINPOS)
 
     u16val = assemble(x_exp, x_frc)
 
