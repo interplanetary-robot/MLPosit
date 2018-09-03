@@ -52,7 +52,9 @@ Current code:
 ```
 
 result:
-0.000348s
+0.000252s
+
+### Comparison against old code
 
 ```julia
   # note: use julia 0.6.4
