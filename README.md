@@ -74,6 +74,13 @@ result:
 result:
 0.000609s
 
+### Building the C/C++ library
+
+```bash
+  make build
+  sudo make install #optional, if you'd like to install it into /usr/lib
+```
+
 ### Using the C/C++ library
 
 The C/C++ library defines the following types.  The Posit8 class can be used in
