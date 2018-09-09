@@ -76,6 +76,9 @@ result:
 
 ### Building the C/C++ library
 
+The C/C++ library comes in the form of the shared library 'libmlposit.so'.
+This will be generated into the ./bin directory.
+
 ```bash
   make build
   sudo make install #optional, if you'd like to install it into /usr/lib
