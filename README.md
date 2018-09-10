@@ -6,11 +6,11 @@ no exponent posits for the purposes of building machine learning hardware.
 
 -  Julia 1.0
 -  C/C++
+-  Javascript (ECMA 6.0)
 
 ### Coming Soon
 
 -  Python
--  Javascript
 
 ### Running in Julia
 
@@ -128,3 +128,46 @@ defined:
 
 No vector or matrix operations are defined, but (in C++) you may use the STL
 vectors and matrix operations, which will "do the right thing".
+
+### using the javascript library
+
+The javascript library is still a bit awkward since javascript doesn't support  
+proper operator overloading.  Nonetheless some basic math is possible for use
+in a forthcoming demonstration.  The library is located in `js/posit8.js`.  Unit
+and comprehensive tests are forthcoming.
+
+The following class is defined:
+```javascript
+  class Posit8 {
+    constructor(value = null){
+      ... // you can pass a floating point value or another posit to this constructor.
+    }
+    toString()
+  }
+```
+
+The following functions are defined:
+
+```javascript
+
+function f_to_p8(x){...}; // outputs the respective number type
+function p8_to_f(x){...}; // outputs the respective number type
+
+function posit8_add(a, b){...}; // outputs a posit8
+function posit8_sub(a, b){...}; // outputs a posit8
+function posit8_mul(a, b){...}; // outputs a posit8
+function posit8_div(a, b){...}; // outputs a posit8
+
+function posit8_gt(a, b){...};  // outputs a bool
+function posit8_gte(a, b){...}; // outputs a bool
+function posit8_lt(a, b){...};  // outputs a bool
+function posit8_lte(a, b){...}; // outputs a bool
+function posit8_eq(a, b){...};  // outputs a bool
+
+```
+
+An example:
+```javascript
+  >> posit8_add(new Posit8(1.0), new Posit8(3.0)).toString()
+  "Posit8(4)"
+```
