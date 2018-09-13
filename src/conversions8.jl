@@ -27,9 +27,9 @@ function finishing(u16val::UInt16)
     return (trunc, round, guard, resid)
 end
 
-function Base.convert(::Type{Posit8}, x::Float64)
+function Base.convert(::Type{P}, x::Float64) where P <: Posit{8}
     override = false
-    override_val = zero(Posit8)
+    override_val = zero(UInt8)
 
     nan_override = isnan(x)
     override |= nan_override
@@ -60,13 +60,13 @@ function Base.convert(::Type{Posit8}, x::Float64)
 
     u8val = (u8val * !override) | (u8val * override)
 
-    reinterpret(Posit8, u8val)
+    p(u8val, P)
 end
 
-function convert_with_branches(x::Float64)
+function convert_with_branches(x::Float64, ::Type{P}) where P <: Posit{8}
 
-    isnan(x) && return nan(Posit8)
-    iszero(x) && return zero(Posit8)
+    isnan(x) && return nan(P)
+    iszero(x) && return zero(P)
 
     (x_neg, x_exp, x_frc) = breakdown(x)
 
@@ -81,7 +81,7 @@ function convert_with_branches(x::Float64)
 
     u8val = trunc + ((round | resid) & guard)
 
-    reinterpret(Posit8, u8val)
+    p(u8val, P)
 end
 
 # an artisanal, hand-crafted lookup table.
@@ -121,11 +121,14 @@ const __posit_lookuptable64 = [
  ]
 
 
-function Base.convert(::Type{Float64}, x::Posit8)
+function Base.convert(::Type{Float64}, x::Posit{8})
     #use a lookup table for the reversion function.
-    __posit_lookuptable64[reinterpret(UInt8, x) + 1]
+    __posit_lookuptable64[u(x) + 1]
 end
 
-#in new julia, explicit conversions are required
+# in new julia, explicit conversions are required
 Float64(x::Posit8) = convert(Float64, x)
 Posit8(x::Float64) = convert(Posit8, x)
+
+# create a type converter for arrays that automatically does dispatch.
+Posit8(a::AbstractArray{T,N}) where T where N = Posit8.(a)

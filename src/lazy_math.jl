@@ -1,15 +1,15 @@
-p2f(p::Posit8)::Float64 = convert(Float64, p)
-f2p(x::Float64)::Posit8 = convert(Posit8, x)
+p2f(p::Posit{8}) = convert(Float64, p)
+f2p(x::Float64, ::Type{P}) where P <: Posit{8} = convert(P, x)
 
-lazyadd(a::Posit8, b::Posit8)::Posit8 = f2p(p2f(a) + p2f(b))
-lazysub(a::Posit8, b::Posit8)::Posit8 = f2p(p2f(a) - p2f(b))
-lazymul(a::Posit8, b::Posit8)::Posit8 = f2p(p2f(a) * p2f(b))
-lazydiv(a::Posit8, b::Posit8)::Posit8 = f2p(p2f(a) / p2f(b))
+lazyadd(a::P, b::P) where P <: Posit{8} = f2p(p2f(a) + p2f(b), P)
+lazysub(a::P, b::P) where P <: Posit{8} = f2p(p2f(a) - p2f(b), P)
+lazymul(a::P, b::P) where P <: Posit{8} = f2p(p2f(a) * p2f(b), P)
+lazydiv(a::P, b::P) where P <: Posit{8} = f2p(p2f(a) / p2f(b), P)
 
-Base.:+(a::Posit8, b::Posit8)::Posit8 = lazyadd(a,b)
-Base.:-(a::Posit8, b::Posit8)::Posit8 = lazysub(a,b)
-Base.:*(a::Posit8, b::Posit8)::Posit8 = lazymul(a,b)
-Base.:/(a::Posit8, b::Posit8)::Posit8 = lazydiv(a,b)
+Base.:+(a::P, b::P) where P <: Posit = lazyadd(a,b)
+Base.:-(a::P, b::P) where P <: Posit = lazysub(a,b)
+Base.:*(a::P, b::P) where P <: Posit = lazymul(a,b)
+Base.:/(a::P, b::P) where P <: Posit = lazydiv(a,b)
 
 # for performance testing analyses.
-branch_add(a::Posit8, b::Posit8)::Posit8 = convert_with_branches(p2f(a) + p2f(b))
+branch_add(a::Posit8, b::Posit8)::Posit8 = convert_with_branches(p2f(a) + p2f(b), Posit8)
