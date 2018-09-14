@@ -31,7 +31,7 @@ function Base.convert(::Type{P}, x::Float64) where P <: Posit{8}
     override = false
     override_val = zero(UInt8)
 
-    nan_override = isnan(x)
+    nan_override = isnan(x) | isinf(x)
     override |= nan_override
     override_val = POSIT8_NAN * nan_override
 
@@ -67,6 +67,7 @@ function convert_with_branches(x::Float64, ::Type{P}) where P <: Posit{8}
 
     isnan(x) && return nan(P)
     iszero(x) && return zero(P)
+    isinf(x) && return nan(P)
 
     (x_neg, x_exp, x_frc) = breakdown(x)
 

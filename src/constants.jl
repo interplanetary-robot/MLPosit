@@ -18,6 +18,9 @@ Base.isnan(x::Posit{8})  = u(x) == POSIT8_NAN
 Base.isone(x::Posit{8})  = u(x) == POSIT8_ONE
 Base.iszero(x::Posit{8}) = u(x) == zero(UInt8)
 
+#there are no infinites in posits.
+Base.isinf(x::Posit)     = false
+
 #some internal constants
 maxpos(::Type{P})    where P <: Posit{8} = p(POSIT8_MAXPOS, P)
 minpos(::Type{P})    where P <: Posit{8} = p(POSIT8_MINPOS, P)
