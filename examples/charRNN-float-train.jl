@@ -2,7 +2,7 @@ using Flux
 using Flux: onehot, chunk, batchseq, throttle, crossentropy
 using StatsBase: wsample
 using Base.Iterators: partition
-# using CuArrays
+using BSON:@save
 
 # relevant input text can be gotten at:
 # https://cs.stanford.edu/people/karpathy/char-rnn/shakespeare_input.txt
