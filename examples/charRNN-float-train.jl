@@ -37,8 +37,15 @@ opt = ADAM(params(m), 0.01)
 tx, ty = (Xs[5], Ys[5])
 evalcb = () -> @show loss(tx, ty)
 
-Flux.train!(loss, zip(Xs, Ys), opt,
-            cb = throttle(evalcb, 30))
+
+for idx=1:20
+  Flux.train!(loss, zip(Xs, Ys), opt,
+              cb = throttle(evalcb, 30))
+
+  println("checkpointing $idx")
+
+  @save "charRNN-ckpt-$idx.bson" m
+end
 
 # Sampling
 
