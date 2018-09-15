@@ -1,2 +1,4 @@
 ./obj/*
 ./bin/*
+examples/shakespeare_input.txt
+examples/*.bson
