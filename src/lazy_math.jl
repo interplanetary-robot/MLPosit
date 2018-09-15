@@ -1,5 +1,5 @@
 p2f(p::Posit{8}) = convert(Float64, p)
-f2p(x::Float64, ::Type{P}) where P <: Posit = convert(P, x)
+f2p(x::Float64, ::Type{P}) where P <: Posit = convert_with_branches(P, x)
 
 lazyadd(a::P, b::P) where P <: Posit = f2p(p2f(a) + p2f(b), P)
 lazysub(a::P, b::P) where P <: Posit = f2p(p2f(a) - p2f(b), P)
@@ -19,6 +19,12 @@ branch_add(a::Posit8, b::Posit8)::Posit8 = convert_with_branches(p2f(a) + p2f(b)
 
 Base.log(a::P) where P <: Posit = f2p(log(p2f(a)), P)
 Base.exp(a::P) where P <: Posit = f2p(exp(p2f(a)), P)
+Base.tanh(a::P) where P <: Posit = f2p(tanh(p2f(a)), P)
+
+#function lazy_sigmoid(x::P) where P<: Posit
+#    val = one(x) / (one(x) + exp(-x))
+#    if isnan(val)
+#end
 
 # a lazy converter because sometimes our functions use integers.
 # TODO: amend crossentropy function instead.
