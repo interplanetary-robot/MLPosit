@@ -13,7 +13,7 @@ text = collect(String(read("shakespeare_input.txt")))
 # we do need to redefine the alphabet here.
 alphabet = [unique(text)..., '_']
 
-@load "charRNN-ckpt.bson" m
+@load "charRNN-ckpt.bson" model
 
 typeswitch(rnn::Flux.Recur, T::Type) = Flux.Recur(typeswitch(rnn.cell, T))
 typeswitch(lstmc::Flux.LSTMCell, T::Type) = Flux.LSTMCell(T.(lstmc.Wi),T.(lstmc.Wh),T.(lstmc.b),T.(lstmc.h),T.(lstmc.c))
@@ -24,10 +24,10 @@ typeswitch(model::Chain, T::Type) = Chain([typeswitch(l, T) for l in model.layer
 #Flux.NNlib.σ(x::Posit) = MLPosit.lazy_sigmoid(x)
 
 # convert the model to a posit model.
-m_float = typeswitch(m, Float64)
-m_float32 = typeswitch(m, Float32)
-m_float16 = typeswitch(m, Float16)
-m_posit = typeswitch(m, Posit8)
+m_float = typeswitch(model, Float64)
+m_float32 = typeswitch(model, Float32)
+m_float16 = typeswitch(model, Float16)
+m_posit = typeswitch(model, Posit8)
 
 # this is a hack, because sometimes we get a NaN value for the posit.
 cleanup(p::T) where T <: MLPosit.Posit = isnan(p) ? zero(T) : p

@@ -21,11 +21,6 @@ Base.log(a::P) where P <: Posit = f2p(log(p2f(a)), P)
 Base.exp(a::P) where P <: Posit = f2p(exp(p2f(a)), P)
 Base.tanh(a::P) where P <: Posit = f2p(tanh(p2f(a)), P)
 
-#function lazy_sigmoid(x::P) where P<: Posit
-#    val = one(x) / (one(x) + exp(-x))
-#    if isnan(val)
-#end
-
 # a lazy converter because sometimes our functions use integers.
 # TODO: amend crossentropy function instead.
 Base.:*(a::P, b::Int64) where P <: Posit = f2p(p2f(a) * b, P)

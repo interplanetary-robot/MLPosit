@@ -4,6 +4,9 @@ using StatsBase: wsample
 using Base.Iterators: partition
 using BSON:@save
 
+# shamelessly ganked from:
+# https://github.com/FluxML/model-zoo/blob/master/text/char-rnn/char-rnn.jl
+
 # relevant input text can be gotten at:
 # https://cs.stanford.edu/people/karpathy/char-rnn/shakespeare_input.txt
 
@@ -25,7 +28,8 @@ m = Chain(
   Dense(128, N),
   softmax)
 
-#m = gpu(m)
+# I don't have a GPU :''''''(
+# m = gpu(m)
 
 function loss(xs, ys)
   l = sum(crossentropy.(m.(xs), ys))
@@ -34,6 +38,7 @@ function loss(xs, ys)
 end
 
 opt = ADAM(params(m), 0.01)
+#tx, ty = (gpu.(Xs[5]), gpu.(Ys[5]))
 tx, ty = (Xs[5], Ys[5])
 evalcb = () -> @show loss(tx, ty)
 
@@ -44,20 +49,7 @@ for idx=1:20
 
   println("checkpointing $idx")
 
-  @save "charRNN-ckpt-$idx.bson" m
+  model = cpu(m)
+
+  @save "charRNN-ckpt-$idx.bson" model
 end
-
-# Sampling
-
-function sample(m, alphabet, len; temp = 1)
-  Flux.reset!(m)
-  buf = IOBuffer()
-  c = rand(alphabet)
-  for i = 1:len
-    write(buf, c)
-    c = wsample(alphabet, m(onehot(c, alphabet)).data)
-  end
-  return String(take!(buf))
-end
-
-sample(m, alphabet, 1000) |> println
