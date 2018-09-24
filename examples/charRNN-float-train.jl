@@ -11,6 +11,10 @@ using BSON:@save
 # https://cs.stanford.edu/people/karpathy/char-rnn/shakespeare_input.txt
 
 text = collect(String(read("shakespeare_input.txt")))
+
+println(typeof(text))
+exit()
+
 alphabet = [unique(text)..., '_']
 text = map(ch -> onehot(ch, alphabet), text)
 stop = onehot('_', alphabet)
@@ -21,6 +25,15 @@ nbatch = 50
 
 Xs = collect(partition(batchseq(chunk(text, nbatch), stop), seqlen))
 Ys = collect(partition(batchseq(chunk(text[2:end], nbatch), stop), seqlen))
+
+println(typeof(Xs))
+println(typeof(Xs[1]))
+println(typeof(Xs[1][1]))
+println(size(Xs[1][1]))
+
+println(Xs[1][1][1,1])
+
+exit()
 
 m = Chain(
   LSTM(N, 128),

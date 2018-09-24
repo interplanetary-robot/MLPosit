@@ -16,7 +16,6 @@ module MLPosit
   include("conversions8.jl")
   include("comparison.jl")
   include("lazy_math.jl")
-  include("mlfunctions.jl")
   include("sugar.jl")
 
 end # module

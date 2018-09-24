@@ -1,7 +1,6 @@
 using Flux, Flux.Data.MNIST
 using Flux: onehotbatch, onecold, throttle
 using Base.Iterators: repeated
-using Flux: crossentropy
 using Statistics
 using BSON: @save
 
@@ -9,9 +8,12 @@ using BSON: @save
 # https://github.com/FluxML/model-zoo/blob/master/vision/mnist/mlp.jl
 # this is a simple multilayer perceptron example.
 
+# include patched machine learning functions
+include("mlfunctions.jl")
+
 # fetch MNIST digits and convert them to MLPosits
 imgs = MNIST.images()
-# Stack images into one large batch
+# Stack first 100 images into one large batch
 full_input = hcat(float.(reshape.(imgs, :))...)
 
 # fetch the labels for each of these digits.
@@ -28,10 +30,15 @@ gl_in(dims...) = (rand(dims...) .- 0.5) .* sqrt(24.0/(sum(dims)))
 model = Chain(
   Dense(28^2, 32, relu, initW = gl_in, initb = p8_zi),
   Dense(32, 10, initW = gl_in, initb = p8_zi),
-  softmax)
+  softmax_a)
 
 # define a loss function over a data set:
-loss(input, truth) = crossentropy(model(input), truth)
+#loss(input, truth) = crossentropy_a(model(input), truth)
+
+function loss(input, truth) 
+  crossentropy_a(model(input), truth)
+end
+
 # and a means of testing the accuracy of our model.  Note that
 # the model should output a 10-vector and the truth is a 10-vector too.
 # argmax will simply find the index of the maximum element
